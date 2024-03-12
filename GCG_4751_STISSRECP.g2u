@@ -1,0 +1,224 @@
+Program.Sub.ScreenSU.Start
+Gui.SS_Form_File..create
+Gui.SS_Form_File..caption("Upload File Selection")
+Gui.SS_Form_File..size(5365,1725)
+Gui.SS_Form_File..position(0,0)
+Gui.SS_Form_File..forecolor(0)
+Gui.SS_Form_File..BackColor(-2147483633)
+Gui.SS_Form_File..maxbutton(False)
+Gui.SS_Form_File..minbutton(False)
+Gui.SS_Form_File..mousepointer(0)
+Gui.SS_Form_File..sizeable(False)
+Gui.SS_Form_File..MinX(0)
+Gui.SS_Form_File..MinY(0)
+Gui.SS_Form_File.lbl_txt_FileSelection.create(label,"File Name",True,1800,200,1,100,135,True,0,Arial,8,-2147483633,0)
+Gui.SS_Form_File.lbl_txt_FileSelection.LabelStretch(True)
+Gui.SS_Form_File.txt_FileSelection.create(textbox,"",True,4500,300,1,105,330,True,0,Arial,8,16777215,1)
+Gui.SS_Form_File.txt_FileSelection.tabstop(True)
+Gui.SS_Form_File.txt_FileSelection.tabindex(1)
+Gui.SS_Form_File.cmd_txt_FileSelection.create(button)
+Gui.SS_Form_File.cmd_txt_FileSelection.Caption("^")
+Gui.SS_Form_File.cmd_txt_FileSelection.size(330,330)
+Gui.SS_Form_File.cmd_txt_FileSelection.position(4680,330)
+Gui.SS_Form_File.cmd_txt_FileSelection.tabstop(True)
+Gui.SS_Form_File.cmd_txt_FileSelection.tabindex(2)
+Gui.SS_Form_File.cmd_txt_FileSelection.Event(Click,cmd_txt_FileSelection_Click)
+Gui.SS_Form_File.cmdFileOK.Create(Button)
+Gui.SS_Form_File.cmdFileOK.Size(855,375)
+Gui.SS_Form_File.cmdFileOK.Position(105,705)
+Gui.SS_Form_File.cmdFileOK.Caption("OK")
+Gui.SS_Form_File.cmdFileOK.Event(Click,Upload)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+'RANJITNAIR
+'PO 4751 Quote 9633 Stannalone Issue Receipt Vantage Products
+
+Gui.SS_Form_File..Show
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_4751_STISSRECP.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Main.End
+
+Program.Sub.Upload.Start
+F.Intrinsic.Control.SetErrorHandler("Upload_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+v.Local.sExcel.Declare(String)
+v.Local.sLine.Declare(String)
+v.Local.sRecords.Declare(String)
+v.Local.sSaveFile.Declare(String)
+v.Local.iCount.Declare(Long)
+v.Local.sPart.Declare(String)
+v.Local.sRev.Declare(String)
+v.Local.fQty.Declare(Float)
+v.Local.sFilter.Declare(string)
+v.Local.sSql.Declare(string)
+v.Local.sRet.Declare(string)
+v.local.sSort.Declare(string)
+
+
+f.Intrinsic.Control.If(v.Screen.SS_Form_File!txt_FileSelection.text,=,"")
+	f.Intrinsic.UI.Msgbox("Invalid File")
+	f.Intrinsic.Control.ExitSub 
+f.Intrinsic.Control.EndIf
+
+Function.Intrinsic.UI.InvokeWaitDialog("please wait ...")
+
+'f.Automation.MSExcel.ReadSpreadsheet(v.Screen.SS_Form_File!txt_FileSelection.text,v.Local.sExcel)
+
+
+'F.Intrinsic.Debug.InvokeDebugger
+'
+'F.Intrinsic.Debug.Stop
+
+
+'Reading from Excel 
+'f.Intrinsic.String.Replace(v.Local.sExcel,"&^&","$!$",v.Local.sExcel)
+'replace Comma 
+'f.Intrinsic.String.Replace(v.Local.sExcel,",","",v.Local.sExcel)
+'f.Intrinsic.File.FileToStringArray(v.Screen.SS_Form_File!txt_FileSelection.text,",",v.Local.sExcel)
+
+'f.Data.DataTable.CreateFromString("Import1",v.Local.sExcel,"PART_NO*!*LOC*!*QTY*!*REF*!*LOT*!*BIN*!*HEAT*!*SERIAL*!*Order_U1*!*SalePrice_U2*!*StoredDate_U3*!*Status_U4*!*Invoice_U5*!*DescriptionUser_U6*!*Ship_U7*!*ShipDate_U8*!*Reason_U9","String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String","*!*","$!$")
+
+'Reading from CSV 
+F.Intrinsic.File.File2String(v.Screen.SS_Form_File!txt_FileSelection.text,V.Local.sExcel)
+
+'Spliting to CSV to take care of Comma
+Function.Intrinsic.String.SPLITCSV(V.Local.sExcel,V.Local.sExcel)
+Function.Intrinsic.String.Join(V.Local.sExcel,"||",V.Local.sExcel)
+
+
+'f.Data.DataTable.CreateFromString("Import1",v.Local.sExcel,"PART_NO*!*LOC*!*QTY*!*REF*!*LOT*!*BIN*!*HEAT*!*SERIAL*!*Order_U1*!*SalePrice_U2*!*StoredDate_U3*!*Status_U4*!*Invoice_U5*!*DescriptionUser_U6*!*Ship_U7*!*ShipDate_U8*!*Reason_U9","String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String",",",v.ambient.newline,True)
+f.Data.DataTable.CreateFromString("Import1",v.Local.sExcel,"PART_NO*!*LOC*!*QTY*!*REF*!*LOT*!*BIN*!*HEAT*!*SERIAL*!*Order_U1*!*SalePrice_U2*!*StoredDate_U3*!*Status_U4*!*Invoice_U5*!*DescriptionUser_U6*!*Ship_U7*!*ShipDate_U8*!*Reason_U9","String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String*!*String","||",v.ambient.newline,True)
+
+f.Data.DataTable.DeleteRow("Import1",0)
+
+'f.Intrinsic.String.Build("PART_NO <>'{0}'","",v.Local.sFilter)
+
+'v.Local.sFilter.Set("PART_NO <> ''")
+'remove blank lines
+v.Local.sFilter.Set("Len(PART_NO)>0")
+
+'v.local.sSort.Set("PART_NO ASC,QTY ASC")
+'Issues will be processed first then all Receipts.
+v.local.sSort.Set("PART_NO ASC,QTY DESC")
+f.Data.DataView.Create("Import1","DVImport")
+Function.Data.DataView.SetFilter("Import1","DVImport",v.Local.sFilter)
+Function.Data.DataView.SetSort("Import1","DVImport",v.local.sSort)
+f.Intrinsic.Control.For(v.Local.iCount,0,v.Dataview.Import1!DVImport.RowCount--,1)
+	v.Local.sLine.Set("")
+	f.Intrinsic.Control.If(v.Dataview.Import1!DVImport(v.Local.iCount).QTY.FieldVal,<>,"")
+		f.Intrinsic.Control.If(v.Dataview.Import1!DVImport(v.Local.iCount).QTY!FieldValFloat,>,0)
+			'We need to do a Receipt, putting into Inventory for the Part Location
+			' 0Part, 1Rev, 2Loc, 3Qty, 4Description, 5Lot,6Bin, 7Heat, 8Serial, I/R, Drop
+			v.Local.sPart.Set("")
+			f.Intrinsic.String.RPad(v.Dataview.Import1!DVImport(v.Local.iCount).PART_NO!FieldVal," ",20,v.Local.sPart)
+			v.Local.sRev.Set(v.Local.sPart.Right3)
+			v.Local.sPart.Set(v.Local.sPart.Left17)
+			F.Intrinsic.String.Build("{0},{1},{2},{3},{4},{5},{6},{7},{8},R,N,,,",V.Local.sPart.Trim,v.Local.sRev.Trim,v.Dataview.Import1!DVImport(v.Local.iCount).LOC!FieldValTrim,v.Dataview.Import1!DVImport(v.Local.iCount).QTY!FieldValFloat,v.Dataview.Import1!DVImport(v.Local.iCount).REF!FieldValTrim,v.Dataview.Import1!DVImport(v.Local.iCount).LOT!FieldValTrim,v.Dataview.Import1!DVImport(v.Local.iCount).BIN!FieldValTrim,v.Dataview.Import1!DVImport(v.Local.iCount).HEAT!FieldValTrim,v.Dataview.Import1!DVImport(v.Local.iCount).SERIAL!FieldValTrim,v.Local.sLine)
+		f.Intrinsic.Control.Else
+			'We need to do a Issue, taking qty out of Inventory for the Part Location
+			' Part, Rev, Loc, Qty, Description, Lot,Bin, Hea, Serial, I/R, Drop
+			v.Local.sPart.Set("")
+			f.Intrinsic.String.RPad(v.Dataview.Import1!DVImport(v.Local.iCount).PART_NO!FieldVal," ",20,v.Local.sPart)
+			v.Local.sRev.Set(v.Local.sPart.Right3)
+			v.Local.sPart.Set(v.Local.sPart.Left17)
+			v.Local.fQty.Set(0)
+			f.Intrinsic.Math.Mult(v.Dataview.Import1!DVImport(v.Local.iCount).QTY!FieldValFloat,-1,v.Local.fQty)
+			F.Intrinsic.String.Build("{0},{1},{2},{3},{4},{5},{6},{7},{8},I,N,,,",V.Local.sPart.Trim,v.Local.sRev.Trim,v.Dataview.Import1!DVImport(v.Local.iCount).LOC!FieldValTrim,V.Local.fQty,v.Dataview.Import1!DVImport(v.Local.iCount).REF!FieldValTrim,v.Dataview.Import1!DVImport(v.Local.iCount).LOT!FieldValTrim,v.Dataview.Import1!DVImport(v.Local.iCount).BIN!FieldValTrim,v.Dataview.Import1!DVImport(v.Local.iCount).HEAT!FieldValTrim,v.Dataview.Import1!DVImport(v.Local.iCount).SERIAL!FieldValTrim,v.Local.sLine)
+		f.Intrinsic.Control.EndIf
+		f.Intrinsic.Control.If(v.Local.sRecords,<>,"")
+			f.Intrinsic.String.Build("{0}{1}{2}",v.Local.sRecords,v.Ambient.NewLine,v.Local.sLine,v.Local.sRecords)
+		f.Intrinsic.Control.Else
+			v.Local.sRecords.Set(v.Local.sLine)
+		f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.Next(v.Local.iCount)
+'We are done looping through so we can save the file
+F.Intrinsic.String.Build("{0}\{1}StandIss.txt",V.Caller.FilesDir,V.Caller.CompanyCode,V.Local.sSaveFile)
+f.Intrinsic.File.String2File(v.Local.sSaveFile,v.Local.sRecords)
+f.Intrinsic.String.Build("{0}StandIss.txt",v.Caller.CompanyCode,v.Local.sSaveFile)
+'f.Intrinsic.Debug.CallWrapperDebugEnable
+f.Intrinsic.Task.LaunchGSSSync("WIR104","-C",v.Local.sSaveFile)
+
+
+v.Local.sFilter.Set("QTY NOT Like '-*' and Len(PART_NO)>0")
+
+Function.Data.DataView.SetFilter("Import1","DVImport",v.Local.sFilter)
+
+Function.Data.DataView.ToDataTable("Import1","DVImport","DTUpdate")
+
+F.ODBC.Connection!con.OpenCompanyConnection(500)
+
+
+F.Data.DataTable.SaveToDB("DTUpdate","con","ITEM_MASTER","PART_NO*!*LOC*!*bin*!*HEAT*!*SERIAL",256,"PART_NO@!@PART*!*LOC@!@Location*!*bin@!@bin*!*HEAT@!@HEAT*!*SERIAL@!@serial_number*!*Order_U1@!@User_Field_1*!*SalePrice_U2@!@User_Field_2*!*StoredDate_U3@!@User_Field_3*!*Status_U4@!@User_Field_4*!*Invoice_U5@!@User_Field_5*!*DescriptionUser_U6@!@User_Field_6*!*Ship_U7@!@User_Field_7*!*ShipDate_U8@!@User_Field_8*!*Reason_U9@!@User_Field_9")
+Function.Intrinsic.UI.CloseWaitDialog
+
+f.Intrinsic.UI.Msgbox("Upload completed successfully")
+
+
+
+F.Data.DataTable.Close("DTUpdate")
+F.Data.DataTable.Close("Import1")
+f.ODBC.Connection!con.Close 
+
+f.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Upload_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.UI.CloseWaitDialog
+	Function.Intrinsic.String.Concat("Project: GCG_4751_STISSRECP.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+Program.Sub.Upload.End
+
+Program.Sub.cmd_txt_FileSelection_Click.Start
+F.Intrinsic.Control.SetErrorHandler("Upload_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+Variable.Local.sFile.Declare(String)
+Variable.Local.sDir.Declare(String)
+
+F.Intrinsic.String.Build("{0}\Select File",V.Caller.FilesDir,V.Local.sDir)
+Function.Intrinsic.UI.ShowOpenFileDialog("","csv|xls|xlsx",V.Local.sDir,V.Local.sFile)
+Function.Intrinsic.Control.If(V.Local.sFile,<>,"***CANCEL***")
+	Gui.SS_Form_File.txt_FileSelection.Text(V.Local.sFile)
+Function.Intrinsic.Control.EndIf
+
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Upload_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_4751_STISSRECP.g2u",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.cmd_txt_FileSelection_Click.End
+
+Program.Sub.Comments.Start
+${$0$}$GCG_4751_STISSRECP$}$RAN$}$9/16/2017 8:51:11 AM$}$False
+${$3$}$0$}$$}$0$}$-1$}$$}$12:00:00 AM$}$This project will create Stand Alone Issues and Receipts based on an incoming excel file.
+Program.Sub.Comments.End
